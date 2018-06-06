@@ -1,22 +1,25 @@
 $(document).ready(function(){
 
-    var topics = [];
+    var topics = ["Game of Thrones", "Star Wars", "Warhammer",];
     
-    $("#animal-submit").click(function(){
+    
+    
+    
+    $("#topic-submit").click(function(){
         event.preventDefault();
-        var newBtn = $("#animal-input").val();
-        var addBtn = $("<button>").text(newBtn).val(newBtn);
-        $("#animal-buttons").append(addBtn);
-        topics.push(addBtn);
-        $("#animal-input").val("");
+        var newTopic = $("#topic-input").val();
+        var addBtn = $("<button>").text(newTopic).val(newTopic);
+        $("#topic-buttons").append(addBtn);
+        topics.push(newTopic);
+        $("#topic-input").val("");
         console.log(topics);
         
         $("button").click(function(){
-            $("#animal-gifs").empty();
-            var animal = $(this).val();
+            $("#gifs").empty();
+            var topic = $(this).val();
             var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
-            animal + "&api_key=VAv72t9cFdirlQwvVfF5kxIMlFkrH0QS&rating=pg&limit=10";
-            console.log(animal);
+            topic + "&api_key=VAv72t9cFdirlQwvVfF5kxIMlFkrH0QS&rating=pg&limit=10";
+            console.log(topic);
     
             $.ajax({
                 url: queryURL,
@@ -31,26 +34,20 @@ $(document).ready(function(){
     
                 for (var i = 0; i < results.length; i++){
     
-                    var animalDiv = $("<div>")
+                    var newDiv = $("<div>")
                     var p = $("<p>").text("Rating: " + results[i].rating);
-                    var animalImage = $("<img>");
-                    animalImage.attr("src", results[i].images.fixed_height.url);
-                    animalDiv.append(p);
-                    animalDiv.append(animalImage);
-                    $("#animal-gifs").append(animalDiv);
-                    $("#animal-gifs").click(function(){
-            
-                        var state = $(this).attr("src", results[i].images.fixed_height_still.url);
-                        if (state === true) {
-                            $(this).attr("src", $(this).attr(results[i].images.fixed_height_still.url));
-                            $(this).attr("data-state", "animate");
-                        } else {
-                            $(this).attr("src", $(this).attr(results[i].images.fixed_height.url));
-                            $(this).attr("data-state", "still");
-                        }
-                    });
+                    var topicImage = $("<img>");
+                    topicImage.attr("src", results[i].images.fixed_height.url);
+                    newDiv.append(p);
+                    newDiv.append(topicImage);
+                    $("#gifs").append(newDiv);
+                    
                 }
-              });
+
+                $("<img>").click(function(){
+                    var src = $(this())
+                })
+            });
         });
     });
 });
