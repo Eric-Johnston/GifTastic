@@ -3,9 +3,15 @@ $(document).ready(function(){
     // Array of topics
     var topics = ["game of thrones", "star wars", "warhammer", "lord of the rings", "hiking", "snowboarding", "fractals", "the matrix", "elder scrolls", "fallout"];
 
-    // This function queries giphy for images and appends them to HTML elements
+    // This creates buttons for every string in the array.
+    for (var j = 0; j < topics.length; j++){
+        var newBtn = $("<button>").text(topics[j]).val(topics[j]);
+        $("#topic-buttons").append(newBtn);
+    }
+    // This function queries giphy for images and appends them to our HTML elements
     function gifDisplay(){
-        $("button").click(function(){
+        $("button").on("click", function(){
+            event.preventDefault();
             $("#gifs").empty();
             var topic = $(this).val();
             var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
@@ -20,30 +26,18 @@ $(document).ready(function(){
                 console.log(response);
                 var results = response.data
                 for (var i = 0; i < results.length; i++){
-                    var newDiv = $("<div>")
                     var p = $("<p>").text("Rating: " + results[i].rating);
-                    var topicImage = $("<img>");
-                    topicImage.attr("src", results[i].images.fixed_height.url);
-                    newDiv.append(p);
-                    newDiv.append(topicImage);
-                    $("#gifs").append(newDiv); 
+                    $("#gifs").append(p);
+                    $("#gifs").append("<img class='gif still' src='" + response.data[i].images.fixed_height_still.url + "'>");
                 }
-                $("<img>").click(function(){
-                    var src = $(this())
-                })
             });
         });
     }
     
-    // This creates buttons for every string in the array.
-    for (var j = 0; j < topics.length; j++){
-        var newBtn = $("<button>").text(topics[j]).val(topics[j]);
-        $("#topic-buttons").append(newBtn);
-    }
     gifDisplay();
     
     // Allows the user to add new topics to the array.
-    $("#topic-submit").click(function(){
+    $("#topic-submit").on("click", function(){
         event.preventDefault();
         var newTopic = $("#topic-input").val();
         var addBtn = $("<button>").text(newTopic).val(newTopic);
@@ -55,17 +49,19 @@ $(document).ready(function(){
         gifDisplay();
     });
 
-    // Not working yet
-    $("<img>").click(function() {
-    	var src = $(this).attr("src");
-      if($(this).hasClass('playing')){
-          //play
-        $(this).addClass('playing');
-        $(this).attr('src', src.replace(/\_s.gif/i, ".gif"))
+    // Initiates the pause/play function -- For some reasong using "img" or "<img>" as a selector wouldn't work, so I made it select any element in the body with a class of ".gif"
+    $("body").on("click", ".gif", function() {
+        var src = $(this).attr("src");
+        console.log(this)
+        // Checks the image for the class "still"
+      if($(this).hasClass("still")){
+        // Replaces gif with images.fixed_height_still.url
+         $(this).attr("src", src.replace(/\_s.gif/i, ".gif"))
+         $(this).removeClass("still");
       } else {
-        //stop
-        $(this).attr('src', src.replace(/\.gif/i, "_s.gif"))
-        $(this).removeClass('playing');
+        // Replaces still images with images.fixed_height.url
+        $(this).addClass("still");
+        $(this).attr("src", src.replace(/\.gif/i, "_s.gif"))
       }
     });
 });
