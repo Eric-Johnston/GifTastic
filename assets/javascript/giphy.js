@@ -23,8 +23,7 @@ $(document).ready(function(){
                 var results = response.data
                 for (var i = 0; i < results.length; i++){
                     var p = $("<p>").text("Rating: " + results[i].rating);
-                    $("#gifs").append(p);
-                    $("#gifs").append("<img class='gif still' src='" + response.data[i].images.fixed_height_still.url + "'>");
+                    $("#gifs").append("<img class='gif still' src='" + response.data[i].images.fixed_height_still.url + "'>").append(p);
                 }
             });
         });
